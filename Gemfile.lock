@@ -1,0 +1,41 @@
+PATH
+  remote: .
+  specs:
+    active_job-performs (0.1.0)
+      activejob (>= 6.1)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    activejob (7.0.4)
+      activesupport (= 7.0.4)
+      globalid (>= 0.3.6)
+    activesupport (7.0.4)
+      concurrent-ruby (~> 1.0, >= 1.0.2)
+      i18n (>= 1.6, < 2)
+      minitest (>= 5.1)
+      tzinfo (~> 2.0)
+    concurrent-ruby (1.1.10)
+    globalid (1.0.0)
+      activesupport (>= 5.0)
+    i18n (1.12.0)
+      concurrent-ruby (~> 1.0)
+    minitest (5.16.3)
+    minitest-sprint (1.2.2)
+      path_expander (~> 1.1)
+    path_expander (1.1.1)
+    rake (13.0.6)
+    tzinfo (2.0.5)
+      concurrent-ruby (~> 1.0)
+
+PLATFORMS
+  arm64-darwin-20
+
+DEPENDENCIES
+  active_job-performs!
+  minitest (~> 5.0)
+  minitest-sprint
+  rake (~> 13.0)
+
+BUNDLED WITH
+   2.3.21

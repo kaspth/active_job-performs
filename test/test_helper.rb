@@ -27,6 +27,11 @@ class Post::Publisher < Base
   performs :publish, queue_as: :important, discard_on: ActiveJob::DeserializationError
 
   performs :retract, wait: 5.minutes
+  performs :social_media_boost, wait_until: -> publisher { publisher.next_funnel_step_happens_at }
+
+  def next_funnel_step_happens_at
+    DateTime.tomorrow.noon
+  end
 
   def publish
     self.class.performed = true
@@ -34,5 +39,9 @@ class Post::Publisher < Base
 
   def retract(reason:)
     puts reason
+  end
+
+  def social_media_boost
+    puts "social media soooo boosted"
   end
 end

@@ -113,17 +113,31 @@ class Post::Publisher < ActiveRecord::AssociatedObject
 end
 ```
 
-### Passing waits to `performs`
+### Passing `wait` to `performs`
 
-If there's a job you want to defer a bit, you can have `performs` automatically set it on the job for each invocation:
+If there's a job you want to defer, `performs` can set it for each invocation:
 
 ```ruby
 class Post < ActiveRecord::Base
-  performs :social_media_boost, wait: 5.minutes # You could fetch it from something like `Rails.application.config_for(:posts).social_media_boost_after` too.
+  mattr_reader :config, default: Rails.application.config_for(:posts)
+
+  performs :social_media_boost, wait: config.social_media_boost_after
+  performs :social_media_boost, wait: 5.minutes # Alternatively, this works too.
+
+  # Additionally, a block can be passed to have access to the `post`:
+  performs :social_media_boost, wait: -> post { post.social_media_boost_grace_period }
 end
 ```
 
-Now, `social_media_boost_later` can be called from a sequence of steps, but automatically run after the 5 minute grace period.
+Now, `social_media_boost_later` can be called immediately, but automatically run after the grace period.
+
+`wait_until` is also supported:
+
+```ruby
+class Post < ActiveRecord::Base
+  performs :publish, wait_until: -> post { Date.tomorrow.noon if post.graceful? }
+end
+```
 
 ## Installation
 

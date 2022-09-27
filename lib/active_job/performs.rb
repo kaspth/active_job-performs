@@ -5,13 +5,26 @@ require_relative "performs/version"
 module ActiveJob; end
 module ActiveJob::Performs
   module Waiting
+    def Proc(value)
+      value.respond_to?(:call) ? value : proc { value }
+    end unless respond_to?(:Proc) # Optimistically assume Ruby gets this and it'll work fine.
+
     def wait(value = nil)
-      @wait = value if value
+      @wait = Proc(value) if value
       @wait
     end
 
-    def scoped_by_wait
-      wait ? set(wait: wait) : self
+    def wait_until(value = nil)
+      @wait_until = Proc(value) if value
+      @wait_until
+    end
+
+    def scoped_by_wait(record)
+      if waits = { wait: wait&.call(record), wait_until: wait_until&.call(record) }.compact and waits.any?
+        set(waits)
+      else
+        self
+      end
     end
   end
 
@@ -32,7 +45,7 @@ module ActiveJob::Performs
 
       class_eval <<~RUBY, __FILE__, __LINE__ + 1
         def #{method}_later(*arguments, **options)
-          #{job}.scoped_by_wait.perform_later(self, *arguments, **options)
+          #{job}.scoped_by_wait(self).perform_later(self, *arguments, **options)
         end
       RUBY
     end

@@ -26,7 +26,13 @@ class Post::Publisher < Base
   performs queue_as: :not_really_important
   performs :publish, queue_as: :important, discard_on: ActiveJob::DeserializationError
 
+  performs :retract, wait: 5.minutes
+
   def publish
     self.class.performed = true
+  end
+
+  def retract(reason:)
+    puts reason
   end
 end

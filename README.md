@@ -113,6 +113,18 @@ class Post::Publisher < ActiveRecord::AssociatedObject
 end
 ```
 
+### Passing waits to `performs`
+
+If there's a job you want to defer a bit, you can have `performs` automatically set it on the job for each invocation:
+
+```ruby
+class Post < ActiveRecord::Base
+  performs :social_media_boost, wait: 5.minutes # You could fetch it from something like `Rails.application.config_for(:posts).social_media_boost_after` too.
+end
+```
+
+Now, `social_media_boost_later` can be called from a sequence of steps, but automatically run after the 5 minute grace period.
+
 ## Installation
 
 Install the gem and add to the application's Gemfile by executing:

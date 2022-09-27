@@ -26,4 +26,14 @@ class ActiveJob::TestPerforms < ActiveSupport::TestCase
 
     assert Post::Publisher.performed
   end
+
+  test "wait is forwarded" do
+    assert_enqueued_with job: Post::Publisher::RetractJob, args: [ @publisher, reason: "Some reason" ], at: 5.minutes.from_now do
+      @publisher.retract_later reason: "Some reason"
+    end
+
+    assert_output "Some reason\n" do
+      perform_enqueued_jobs
+    end
+  end
 end

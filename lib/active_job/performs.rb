@@ -4,8 +4,19 @@ require_relative "performs/version"
 
 module ActiveJob; end
 module ActiveJob::Performs
+  module Waiting
+    def wait(value = nil)
+      @wait = value if value
+      @wait
+    end
+
+    def scoped_by_wait
+      wait ? set(wait: wait) : self
+    end
+  end
+
   def performs(method = nil, **configs, &block)
-    @job ||= safe_define("Job") { ApplicationJob }
+    @job ||= safe_define("Job") { ApplicationJob }.tap { _1.extend Waiting }
 
     if method.nil?
       apply_performs_to(@job, **configs, &block)
@@ -21,7 +32,7 @@ module ActiveJob::Performs
 
       class_eval <<~RUBY, __FILE__, __LINE__ + 1
         def #{method}_later(*arguments, **options)
-          #{job}.perform_later(self, *arguments, **options)
+          #{job}.scoped_by_wait.perform_later(self, *arguments, **options)
         end
       RUBY
     end

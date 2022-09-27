@@ -57,9 +57,7 @@ module ActiveJob::Performs
     end
 
     def apply_performs_to(job_class, **configs, &block)
-      job_class.class_eval do
-        configs.each { public_send(_1, _2) }
-        yield if block_given?
-      end
+      configs.each { job_class.public_send(_1, _2) }
+      job_class.class_exec(&block) if block_given?
     end
 end

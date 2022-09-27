@@ -23,7 +23,9 @@ class Post::Publisher < Base
   singleton_class.attr_accessor :performed
 
   performs queue_as: :not_really_important
-  performs :publish, queue_as: :important, discard_on: ActiveJob::DeserializationError
+  performs :publish, queue_as: :important, discard_on: ActiveJob::DeserializationError do
+    retry_on StandardError, wait: :exponentially_longer
+  end
 
   performs :retract, wait: 5.minutes
   performs :social_media_boost, wait_until: -> publisher { publisher.next_funnel_step_happens_at }

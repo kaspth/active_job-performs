@@ -14,6 +14,10 @@ class ActiveJob::TestPerforms < ActiveSupport::TestCase
     refute_nil ::ActiveJob::Performs::VERSION
   end
 
+  test "a general job class is defined" do
+    assert defined?(Post::Publisher::Job)
+  end
+
   test "active job integration" do
     assert_performed_with job: Post::Publisher::PublishJob, args: [ @publisher ], queue: "important" do
       @publisher.publish_later

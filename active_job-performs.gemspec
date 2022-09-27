@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.authors = ["Kasper Timm Hansen"]
   spec.email = ["hey@kaspth.com"]
 
-  spec.summary = "ActiveJob::Performs is a lightweight DSL for setting up jobs by convention."
+  spec.summary = "ActiveJob::Performs adds the `performs` macro to set up jobs by convention."
   spec.homepage = "https://github.com/kaspth/active_job-performs"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.0.0"

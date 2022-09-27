@@ -1,6 +1,6 @@
 # ActiveJob::Performs
 
-`ActiveJob::Performs` is a lightweight DSL for setting up jobs by convention.
+`ActiveJob::Performs` adds the `performs` macro to set up jobs by convention.
 
 ## Usage with `include GlobalID::Identification` objects
 

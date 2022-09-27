@@ -15,7 +15,6 @@ module Post; end
 
 class Base < Struct.new(:id)
   include GlobalID::Identification
-  singleton_class.alias_method :find, :new
 end
 
 class Post::Publisher < Base

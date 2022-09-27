@@ -61,3 +61,5 @@ module ActiveJob::Performs
       job_class.class_exec(&block) if block_given?
     end
 end
+
+ActiveSupport.on_load(:active_record) { extend ActiveJob::Performs }

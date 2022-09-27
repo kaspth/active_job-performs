@@ -14,8 +14,9 @@ class ActiveJob::TestPerforms < ActiveSupport::TestCase
     refute_nil ::ActiveJob::Performs::VERSION
   end
 
-  test "a general job class is defined" do
+  test "a general job class is defined with queue_as set" do
     assert defined?(Post::Publisher::Job)
+    assert_equal "not_really_important", Post::Publisher::Job.queue_name
   end
 
   test "active job integration" do

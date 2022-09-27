@@ -10,6 +10,8 @@
 
 ```ruby
 class Post < ActiveRecord::Base
+  extend ActiveJob::Performs # We technically auto-extend ActiveRecord::Base, but other object hierarchies need this.
+
   # `performs` builds a `Post::PublishJob` and routes configs over to it.
   performs :publish, queue_as: :important, discard_on: SomeError do
     retry_on TimeoutError, wait: :exponentially_longer
@@ -95,6 +97,8 @@ The [`ActiveRecord::AssociatedObject`](https://github.com/kaspth/active_record-a
 
 ```ruby
 class Post::Publisher < ActiveRecord::AssociatedObject
+  extend ActiveJob::Performs # We technically auto-extend ActiveRecord::AssociatedObject, but other object hierarchies need this.
+
   performs queue_as: :important
   performs :publish
   performs :retract

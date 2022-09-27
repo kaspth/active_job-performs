@@ -7,7 +7,7 @@ module ActiveJob::Performs
   module Waiting
     def Proc(value)
       value.respond_to?(:call) ? value : proc { value }
-    end unless respond_to?(:Proc) # Optimistically assume Ruby gets this and it'll work fine.
+    end unless Kernel.respond_to?(:Proc) # Optimistically assume Ruby gets this and it'll work fine.
 
     def wait(value = nil)
       @wait = Proc(value) if value

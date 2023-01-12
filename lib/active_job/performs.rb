@@ -39,7 +39,7 @@ module ActiveJob::Performs
 
       job.class_eval <<~RUBY, __FILE__, __LINE__ + 1 unless job.instance_method(:perform).owner == job
         def perform(object, *arguments, **options)
-          object.#{method}(*arguments, **options)
+          object.send(:#{method}, *arguments, **options)
         end
       RUBY
 

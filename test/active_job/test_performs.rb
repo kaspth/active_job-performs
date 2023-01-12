@@ -27,6 +27,14 @@ class ActiveJob::TestPerforms < ActiveSupport::TestCase
     assert Post::Publisher.performed
   end
 
+  test "supports private methods" do
+    assert_output "private_method\n" do
+      assert_performed_with job: Post::Publisher::PrivateMethodJob, args: [ @publisher ] do
+        @publisher.private_method_later
+      end
+    end
+  end
+
   test "wait is forwarded" do
     assert_enqueued_with job: Post::Publisher::RetractJob, args: [ @publisher, reason: "Some reason" ], at: 5.minutes.from_now do
       @publisher.retract_later reason: "Some reason"

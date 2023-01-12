@@ -45,4 +45,10 @@ class Post::Publisher < Base
   def social_media_boost
     puts "social media soooo boosted"
   end
+
+  performs :private_method
+
+  private def private_method
+    puts __method__
+  end
 end

@@ -28,9 +28,11 @@ class ActiveJob::TestPerforms < ActiveSupport::TestCase
   end
 
   test "supports private methods" do
+    assert_includes Post::Publisher.private_instance_methods, :private_method_later
+
     assert_output "private_method\n" do
       assert_performed_with job: Post::Publisher::PrivateMethodJob, args: [ @publisher ] do
-        @publisher.private_method_later
+        @publisher.send(:private_method_later)
       end
     end
   end

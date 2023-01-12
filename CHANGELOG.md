@@ -1,5 +1,11 @@
 ## [Unreleased]
 
+- Supports `private performs :some_method`
+
+  Which then generates a private `some_method_later` method.
+
+  This was already technically supported but a test was added to declare it expected.
+
 - Support method suffixes ! and ?
 
   You can call `performs :some_method!` and have `some_method_later!` generated. Same for `?`.

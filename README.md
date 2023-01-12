@@ -91,6 +91,25 @@ class Post < ActiveRecord::Base
 end
 ```
 
+#### Method suffixes
+
+`ActiveJob::Performs` supports Ruby's stylistic method suffixes, i.e. ? and ! respectively.
+
+```ruby
+class Post < ActiveRecord::Base
+  performs :publish! # Generates `publish_later!` which calls `publish!`.
+  performs :retract? # Generates `retract_later?` which calls `retract?`.
+
+  def publish!
+    …
+  end
+
+  def retract?
+    …
+  end
+end
+```
+
 #### Private methods
 
 `ActiveJob::Performs` also works with private methods in case you only want to expose the generated `_later` method.

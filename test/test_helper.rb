@@ -28,7 +28,7 @@ class Post::Publisher < Base
   end
 
   performs :retract, wait: 5.minutes
-  performs :social_media_boost, wait_until: -> publisher { publisher.next_funnel_step_happens_at }
+  performs :social_media_boost!, wait_until: -> publisher { publisher.next_funnel_step_happens_at }
 
   def next_funnel_step_happens_at
     DateTime.tomorrow.noon
@@ -42,7 +42,7 @@ class Post::Publisher < Base
     puts reason
   end
 
-  def social_media_boost
+  def social_media_boost!
     puts "social media soooo boosted"
   end
 

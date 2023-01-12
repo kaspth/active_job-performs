@@ -47,7 +47,7 @@ class ActiveJob::TestPerforms < ActiveSupport::TestCase
 
   test "wait_until with instance context" do
     assert_enqueued_with job: Post::Publisher::SocialMediaBoostJob, args: [ @publisher ], at: Date.tomorrow.noon do
-      @publisher.social_media_boost_later
+      @publisher.social_media_boost_later!
     end
 
     assert_output "social media soooo boosted\n" do

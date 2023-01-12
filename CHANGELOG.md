@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.2.0] - 2023-01-12
+
 - Supports `private performs :some_method`
 
   Which then generates a private `some_method_later` method.

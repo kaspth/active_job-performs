@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    active_job-performs (0.1.1)
+    active_job-performs (0.2.0)
       activejob (>= 6.1)
 
 GEM

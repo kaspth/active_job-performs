@@ -34,17 +34,20 @@ module ActiveJob::Performs
     if method.nil?
       apply_performs_to(@job, **configs, &block)
     else
+      method = method.to_s.dup
+      suffix = $1 if method.gsub!(/([!?])$/, "")
+
       job = safe_define("#{method}_job".classify) { @job }
       apply_performs_to(job, **configs, &block)
 
       job.class_eval <<~RUBY, __FILE__, __LINE__ + 1 unless job.instance_method(:perform).owner == job
         def perform(object, *arguments, **options)
-          object.send(:#{method}, *arguments, **options)
+          object.send(:#{method}#{suffix}, *arguments, **options)
         end
       RUBY
 
       class_eval <<~RUBY, __FILE__, __LINE__ + 1
-        def #{method}_later(*arguments, **options)
+        def #{method}_later#{suffix}(*arguments, **options)
           #{job}.scoped_by_wait(self).perform_later(self, *arguments, **options)
         end
       RUBY

@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+- Support method suffixes ! and ?
+
+  You can call `performs :some_method!` and have `some_method_later!` generated. Same for `?`.
+
 - Support `performs` on private methods
 
   Method jobs will now call methods with `send`, in case you only want to expose the generated later method to the outside world.

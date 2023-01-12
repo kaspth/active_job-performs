@@ -91,6 +91,21 @@ class Post < ActiveRecord::Base
 end
 ```
 
+#### Private methods
+
+`ActiveJob::Performs` also works with private methods in case you only want to expose the generated `_later` method.
+
+```ruby
+class Post < ActiveRecord::Base
+  performs :publish # Generates the public `publish_later` instance method.
+
+  # Private implementation, only call `publish_later` please!
+  private def publish
+    …
+  end
+end
+```
+
 ### Usage with ActiveRecord::AssociatedObject
 
 The [`ActiveRecord::AssociatedObject`](https://github.com/kaspth/active_record-associated_object) gem also implements `GlobalID::Identification`, so you can do this too:

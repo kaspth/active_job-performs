@@ -125,7 +125,7 @@ class Post < ActiveRecord::Base
 end
 ```
 
-Additionally, in case the job is just meant to be internal to the object, `performs :some_method` returns `:some_method_later` which you can pass to `private`.
+Additionally, in case the job is meant to be internal to the object, `performs :some_method` returns `:some_method_later` which you can pass to `private`.
 
 E.g. `private performs :some_method` will generate a private `some_method_later` method.
 

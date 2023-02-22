@@ -21,11 +21,13 @@ class Post::Publisher < Base
   extend ActiveJob::Performs
 
   singleton_class.attr_accessor :performed
+  singleton_class.attr_accessor :all_published
 
   performs queue_as: :not_really_important
   performs :publish, queue_as: :important, discard_on: ActiveJob::DeserializationError do
     retry_on StandardError, wait: :exponentially_longer
   end
+  performs :publish_all
 
   performs :retract, wait: 5.minutes
   performs :social_media_boost!, wait_until: -> publisher { publisher.next_funnel_step_happens_at }
@@ -36,6 +38,10 @@ class Post::Publisher < Base
 
   def publish
     self.class.performed = true
+  end
+
+  def self.publish_all(say_please)
+    self.class.all_published = say_please
   end
 
   def retract(reason:)

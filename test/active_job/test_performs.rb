@@ -7,6 +7,7 @@ class ActiveJob::TestPerforms < ActiveSupport::TestCase
 
   setup do
     Post::Publisher.performed = false
+    Post::Publisher.all_published = false
     @publisher = Post::Publisher.new(1)
   end
 
@@ -25,6 +26,14 @@ class ActiveJob::TestPerforms < ActiveSupport::TestCase
     end
 
     assert Post::Publisher.performed
+  end
+
+  test "supports class methods" do
+    assert_performed_with job: Post::Publisher::PublishAllJob, args: [ "please" ] do
+      Post::Publisher.publish_all_later("please")
+    end
+
+    assert Post::Publisher.all_published = "please"
   end
 
   test "supports private methods" do

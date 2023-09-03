@@ -42,6 +42,14 @@ class Post < ActiveRecord::Base
     end
   end
 
+  # On Rails 7.1, where `ActiveJob.perform_all_later` exists, we also generate
+  # a bulk method to enqueue many jobs at once. So you can do this:
+  #
+  #   Post.unpublished.in_batches.each(&:publish_later_bulk)
+  def self.publish_later_bulk
+    ActiveJob.perform_all_later all.map { PublishJob.new(_1) }
+  end
+
   # We generate `publish_later` to wrap the job execution.
   def publish_later(*arguments, **options)
     PublishJob.perform_later(self, *arguments, **options)

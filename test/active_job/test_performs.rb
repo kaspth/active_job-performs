@@ -3,8 +3,6 @@
 require "test_helper"
 
 class ActiveJob::TestPerforms < ActiveSupport::TestCase
-  include ActiveJob::TestHelper
-
   setup do
     Post::Publisher.performed = false
     @publisher = Post::Publisher.new(1)

@@ -10,33 +10,58 @@ GEM
     activejob (7.0.4)
       activesupport (= 7.0.4)
       globalid (>= 0.3.6)
+    activemodel (7.0.4)
+      activesupport (= 7.0.4)
+    activerecord (7.0.4)
+      activemodel (= 7.0.4)
+      activesupport (= 7.0.4)
     activesupport (7.0.4)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
       tzinfo (~> 2.0)
     concurrent-ruby (1.1.10)
+    debug (1.8.0)
+      irb (>= 1.5.0)
+      reline (>= 0.3.1)
     globalid (1.0.0)
       activesupport (>= 5.0)
     i18n (1.12.0)
       concurrent-ruby (~> 1.0)
+    io-console (0.6.0)
+    irb (1.8.0)
+      rdoc (~> 6.5)
+      reline (>= 0.3.6)
     minitest (5.16.3)
     minitest-sprint (1.2.2)
       path_expander (~> 1.1)
     path_expander (1.1.1)
+    psych (5.1.0)
+      stringio
     rake (13.0.6)
+    rdoc (6.5.0)
+      psych (>= 4.0.0)
+    reline (0.3.8)
+      io-console (~> 0.5)
+    sqlite3 (1.6.4-arm64-darwin)
+    sqlite3 (1.6.4-x86_64-linux)
+    stringio (3.0.8)
     tzinfo (2.0.5)
       concurrent-ruby (~> 1.0)
 
 PLATFORMS
   arm64-darwin-20
+  arm64-darwin-22
   x86_64-linux
 
 DEPENDENCIES
   active_job-performs!
+  activerecord
+  debug
   minitest (~> 5.0)
   minitest-sprint
   rake (~> 13.0)
+  sqlite3
 
 BUNDLED WITH
-   2.3.21
+   2.4.19

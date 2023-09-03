@@ -4,17 +4,43 @@ $LOAD_PATH.unshift File.expand_path("../lib", __dir__)
 require "active_job"
 require "active_job/performs"
 
+require "active_record"
+
 require "minitest/autorun"
+
+require "debug"
 
 class ApplicationJob < ActiveJob::Base; end
 
 GlobalID.app = :performs
-GlobalID::Locator.use(:performs) { Post::Publisher.new(_1.model_id.to_i) }
+GlobalID::Locator.use(:performs) { _1.model_class.find(_1.model_id.to_i) }
+
+ActiveRecord::Base.establish_connection(adapter: "sqlite3", database: ":memory:")
+ActiveRecord::Base.logger = Logger.new(STDOUT)
+
+ActiveRecord::Schema.define do
+  create_table :invoices do |t|
+    t.datetime :reminded_at
+    t.timestamps
+  end
+end
+
+class Invoice < ActiveRecord::Base
+  include GlobalID::Identification
+  extend ActiveJob::Performs
+
+  performs :deliver_reminder
+  def deliver_reminder
+    touch :reminded_at
+  end
+end
 
 module Post; end
 
 class Base < Struct.new(:id)
   include GlobalID::Identification
+
+  singleton_class.alias_method :find, :new
 end
 
 class Post::Publisher < Base
@@ -50,5 +76,19 @@ class Post::Publisher < Base
 
   private def private_method
     puts __method__
+  end
+end
+
+class ActiveSupport::TestCase
+  include ActiveJob::TestHelper
+
+  # Override Minitest::Test#run to wrap each test in a transaction.
+  def run
+    result = nil
+    ActiveRecord::Base.transaction(requires_new: true) do
+      result = super
+      raise ActiveRecord::Rollback
+    end
+    result
   end
 end

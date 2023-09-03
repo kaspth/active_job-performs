@@ -46,6 +46,14 @@ module ActiveJob::Performs
         end
       RUBY
 
+      if ActiveJob.respond_to?(:perform_all_later) && respond_to?(:all)
+        class_eval <<~RUBY, __FILE__, __LINE__ + 1
+          def self.#{method}_later#{suffix}_bulk
+            ActiveJob.perform_all_later all.map { #{job}.scoped_by_wait(_1).new(_1) }
+          end
+        RUBY
+      end
+
       class_eval <<~RUBY, __FILE__, __LINE__ + 1
         def #{method}_later#{suffix}(*arguments, **options)
           #{job}.scoped_by_wait(self).perform_later(self, *arguments, **options)

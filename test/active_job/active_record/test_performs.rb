@@ -8,7 +8,7 @@ class ActiveJob::ActiveRecord::TestPerforms < ActiveSupport::TestCase
 
   test "performs individually" do
     assert_performed_with job: Invoice::DeliverReminderJob, args: [Invoice.first] do
-      Invoice.first.deliver_reminder_later
+      Invoice.first.deliver_reminder_later!
     end
     perform_enqueued_jobs
 
@@ -17,7 +17,7 @@ class ActiveJob::ActiveRecord::TestPerforms < ActiveSupport::TestCase
 
   test "performs bulk" do
     assert_enqueued_jobs 5, only: Invoice::DeliverReminderJob do
-      Invoice.all.deliver_reminder_later_bulk
+      Invoice.all.deliver_reminder_later_bulk!
     end
     perform_enqueued_jobs
 
@@ -26,7 +26,7 @@ class ActiveJob::ActiveRecord::TestPerforms < ActiveSupport::TestCase
 
   test "performs bulk in_batches" do
     assert_enqueued_jobs 5, only: Invoice::DeliverReminderJob do
-      Invoice.in_batches(of: 2).each(&:deliver_reminder_later_bulk)
+      Invoice.in_batches(of: 2).each(&:deliver_reminder_later_bulk!)
     end
     perform_enqueued_jobs
 
@@ -35,7 +35,7 @@ class ActiveJob::ActiveRecord::TestPerforms < ActiveSupport::TestCase
 
   test "performs bulk on relation" do
     assert_enqueued_jobs 3, only: Invoice::DeliverReminderJob do
-      Invoice.where(id: Invoice.first(3)).deliver_reminder_later_bulk
+      Invoice.where(id: Invoice.first(3)).deliver_reminder_later_bulk!
     end
     perform_enqueued_jobs
 

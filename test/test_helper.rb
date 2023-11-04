@@ -29,8 +29,8 @@ class Invoice < ActiveRecord::Base
   include GlobalID::Identification
   extend ActiveJob::Performs
 
-  performs :deliver_reminder
-  def deliver_reminder
+  performs :deliver_reminder!
+  def deliver_reminder!
     touch :reminded_at
   end
 end

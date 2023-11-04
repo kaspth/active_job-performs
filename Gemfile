@@ -13,7 +13,7 @@ gem "minitest-sprint"
 gem "debug"
 
 # Fetch latest Active Job to test `ActiveJob.perform_all_later`
-gem "rails", github: "rails/rails"
+gem "activejob",    ">= 7.1"
+gem "activerecord", ">= 7.1"
 
-# gem "activerecord" # We get this from Rails above ^
 gem "sqlite3"

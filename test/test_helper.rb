@@ -34,8 +34,6 @@ class Invoice < ActiveRecord::Base
   end
 end
 
-module Post; end
-
 class Base < Struct.new(:id)
   extend ActiveJob::Performs
   include GlobalID::Identification
@@ -43,6 +41,7 @@ class Base < Struct.new(:id)
   singleton_class.alias_method :find, :new
 end
 
+module Post; end
 class Post::Publisher < Base
   singleton_class.attr_accessor :performed
 

@@ -70,9 +70,7 @@ class Post::Publisher < Base
     puts "social media soooo boosted"
   end
 
-  private performs :private_method
-
-  private def private_method
+  private performs def private_method
     puts __method__
   end
 end

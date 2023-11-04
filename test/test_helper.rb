@@ -27,7 +27,6 @@ end
 
 class Invoice < ActiveRecord::Base
   include GlobalID::Identification
-  extend ActiveJob::Performs
 
   performs :deliver_reminder!
   def deliver_reminder!
@@ -38,14 +37,13 @@ end
 module Post; end
 
 class Base < Struct.new(:id)
+  extend ActiveJob::Performs
   include GlobalID::Identification
 
   singleton_class.alias_method :find, :new
 end
 
 class Post::Publisher < Base
-  extend ActiveJob::Performs
-
   singleton_class.attr_accessor :performed
 
   performs queue_as: :not_really_important

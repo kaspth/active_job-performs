@@ -5,10 +5,8 @@ require "active_job"
 require "active_job/performs"
 
 require "active_record"
-
-require "minitest/autorun"
-
 require "debug"
+require "minitest/autorun"
 
 class ApplicationJob < ActiveJob::Base; end
 

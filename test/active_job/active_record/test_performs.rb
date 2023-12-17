@@ -2,6 +2,42 @@ require "test_helper"
 
 module ActiveJob::ActiveRecord; end
 class ActiveJob::ActiveRecord::TestPerforms < ActiveSupport::TestCase
+  setup { @invoice = Invoice.create! }
+
+  test "touch_later" do
+    assert_changes -> { @invoice.reload.updated_at } do
+      assert_performed_with job: ApplicationRecord::TouchJob, args: [@invoice] do
+        @invoice.touch_later
+      end
+    end
+
+    time = Time.now.utc.change(usec: 0)
+    assert_changes -> { @invoice.reload.reminded_at }, to: time do
+      assert_performed_with job: ApplicationRecord::TouchJob, args: [@invoice, :reminded_at, time: time] do
+        @invoice.touch_later :reminded_at, time: time
+      end
+    end
+  end
+
+  test "update_later" do
+    time = Time.now.utc.change(usec: 0)
+    assert_changes -> { @invoice.reload.reminded_at }, to: time do
+      assert_performed_with job: ApplicationRecord::UpdateJob, args: [@invoice, reminded_at: time] do
+        @invoice.update_later reminded_at: time
+      end
+    end
+  end
+
+  test "destroy_later" do
+    assert_enqueued_with job: ApplicationRecord::DestroyJob, args: [@invoice] do
+      @invoice.destroy_later
+    end
+    perform_enqueued_jobs
+    assert_raise(ActiveRecord::RecordNotFound) { @invoice.reload }
+  end
+end
+
+class ActiveJob::ActiveRecord::TestPerformsBulk < ActiveSupport::TestCase
   setup do
     Invoice.insert_all [{}, {}, {}, {}, {}]
   end

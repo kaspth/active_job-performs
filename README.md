@@ -99,6 +99,38 @@ class Post < ActiveRecord::Base
 end
 ```
 
+#### Establishing patterns across your app
+
+If there's an Active Record method that you'd like any model to be able to run from a background job, you can set them up in your `ApplicationRecord`:
+
+```ruby
+class ApplicationRecord < ActiveRecord::Base
+  self.abstract_class = true
+
+  # We're passing specific queues for monitoring, but you may not need or want them.
+  performs :touch,   queue_as: "active_record.touch"
+  performs :update,  queue_as: "active_record.update"
+  performs :destroy, queue_as: "active_record.destroy"
+end
+```
+
+Then a model could now run things like:
+
+```ruby
+record.touch_later
+record.touch_later :reminded_at, time: 5.minutes.from_now # Pass supported arguments to `touch`
+
+record.update_later reminded_at: 1.year.ago
+
+# Particularly handy to use on a record with many `dependent: :destroy` associations.
+# Plus if anything fails, the transaction will rollback and the job fails, so you can retry it later!
+record.destroy_later
+```
+
+You may not want this for `touch` and `update`, and maybe you'd rather architect your system in such a way that they don't have so many side-effects, but having the option can be handy!
+
+Also, I haven't tested all the Active Record methods, so please file an issue if you encounter any.
+
 #### Method suffixes
 
 `ActiveJob::Performs` supports Ruby's stylistic method suffixes, i.e. ? and ! respectively.

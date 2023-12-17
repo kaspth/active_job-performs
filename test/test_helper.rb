@@ -23,9 +23,17 @@ ActiveRecord::Schema.define do
   end
 end
 
-class Invoice < ActiveRecord::Base
+class ApplicationRecord < ActiveRecord::Base
   include GlobalID::Identification
 
+  self.abstract_class = true
+
+  performs :touch,   queue_as: "active_record.touch"
+  performs :update,  queue_as: "active_record.update"
+  performs :destroy, queue_as: "active_record.destroy"
+end
+
+class Invoice < ApplicationRecord
   performs :deliver_reminder!
   def deliver_reminder!
     touch :reminded_at

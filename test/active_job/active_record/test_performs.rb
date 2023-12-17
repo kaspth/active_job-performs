@@ -11,7 +11,7 @@ class ActiveJob::ActiveRecord::TestPerforms < ActiveSupport::TestCase
       end
     end
 
-    time = 5.minutes.from_now.utc
+    time = Time.now.utc.change(usec: 0)
     assert_changes -> { @invoice.reload.reminded_at }, to: time do
       assert_performed_with job: ApplicationRecord::TouchJob, args: [@invoice, :reminded_at, time: time] do
         @invoice.touch_later :reminded_at, time: time
@@ -20,7 +20,7 @@ class ActiveJob::ActiveRecord::TestPerforms < ActiveSupport::TestCase
   end
 
   test "update_later" do
-    time = 5.minutes.from_now.utc
+    time = Time.now.utc.change(usec: 0)
     assert_changes -> { @invoice.reload.reminded_at }, to: time do
       assert_performed_with job: ApplicationRecord::UpdateJob, args: [@invoice, reminded_at: time] do
         @invoice.update_later reminded_at: time

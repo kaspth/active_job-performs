@@ -169,7 +169,7 @@ Additionally, in case the job is meant to be internal to the object, `performs :
 
 E.g. `private performs :some_method` will generate a private `some_method_later` method.
 
-### Usage with ActiveRecord::AssociatedObject
+### Usage with `ActiveRecord::AssociatedObject`
 
 The [`ActiveRecord::AssociatedObject`](https://github.com/kaspth/active_record-associated_object) gem also implements `GlobalID::Identification`, so you can do this too:
 

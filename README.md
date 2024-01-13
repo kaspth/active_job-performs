@@ -2,7 +2,7 @@
 
 `ActiveJob::Performs` adds the `performs` macro to set up jobs by convention.
 
-## Usage with `include GlobalID::Identification` objects
+## Usage with `ActiveRecord::Base` & other `GlobalID::Identification` objects
 
 `ActiveJob::Performs` works with any object that has `include GlobalID::Identification` and responds to that interface.
 

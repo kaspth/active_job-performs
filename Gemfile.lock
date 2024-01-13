@@ -7,16 +7,16 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    activejob (7.1.1)
-      activesupport (= 7.1.1)
+    activejob (7.1.2)
+      activesupport (= 7.1.2)
       globalid (>= 0.3.6)
-    activemodel (7.1.1)
-      activesupport (= 7.1.1)
-    activerecord (7.1.1)
-      activemodel (= 7.1.1)
-      activesupport (= 7.1.1)
+    activemodel (7.1.2)
+      activesupport (= 7.1.2)
+    activerecord (7.1.2)
+      activemodel (= 7.1.2)
+      activesupport (= 7.1.2)
       timeout (>= 0.4.0)
-    activesupport (7.1.1)
+    activesupport (7.1.2)
       base64
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.0.2)
@@ -26,46 +26,47 @@ GEM
       minitest (>= 5.1)
       mutex_m
       tzinfo (~> 2.0)
-    base64 (0.1.1)
-    bigdecimal (3.1.4)
+    base64 (0.2.0)
+    bigdecimal (3.1.5)
     concurrent-ruby (1.2.2)
     connection_pool (2.4.1)
-    debug (1.8.0)
-      irb (>= 1.5.0)
-      reline (>= 0.3.1)
-    drb (2.1.1)
+    debug (1.9.1)
+      irb (~> 1.10)
+      reline (>= 0.3.8)
+    drb (2.2.0)
       ruby2_keywords
     globalid (1.2.1)
       activesupport (>= 6.1)
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
-    io-console (0.6.0)
-    irb (1.8.0)
-      rdoc (~> 6.5)
-      reline (>= 0.3.6)
-    minitest (5.16.3)
+    io-console (0.7.1)
+    irb (1.11.1)
+      rdoc
+      reline (>= 0.4.2)
+    minitest (5.21.1)
     minitest-sprint (1.2.2)
       path_expander (~> 1.1)
-    mutex_m (0.1.2)
+    mutex_m (0.2.0)
     path_expander (1.1.1)
-    psych (5.1.0)
+    psych (5.1.2)
       stringio
-    rake (13.0.6)
-    rdoc (6.5.0)
+    rake (13.1.0)
+    rdoc (6.6.2)
       psych (>= 4.0.0)
-    reline (0.3.8)
+    reline (0.4.2)
       io-console (~> 0.5)
     ruby2_keywords (0.0.5)
-    sqlite3 (1.6.4-arm64-darwin)
-    sqlite3 (1.6.4-x86_64-linux)
-    stringio (3.0.8)
-    timeout (0.4.0)
+    sqlite3 (1.7.0-arm64-darwin)
+    sqlite3 (1.7.0-x86_64-linux)
+    stringio (3.1.0)
+    timeout (0.4.1)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
 
 PLATFORMS
   arm64-darwin-20
   arm64-darwin-22
+  arm64-darwin-23
   x86_64-linux
 
 DEPENDENCIES
@@ -79,4 +80,4 @@ DEPENDENCIES
   sqlite3
 
 BUNDLED WITH
-   2.4.19
+   2.5.4

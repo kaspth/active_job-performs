@@ -219,7 +219,7 @@ end
 
 ### Praise from people
 
-Here's what [@nshki](https://github.com/nshki) found [when they tried `ActiveJob::Performs`](https://ruby.social/@nshki/111727840884256727):
+Here's what [@nshki](https://github.com/nshki) found when they tried `ActiveJob::Performs`:
 
 > Spent some time playing with [@kaspth](https://github.com/kaspth)'s [`ActiveRecord::AssociatedObject`](https://github.com/kaspth/active_record-associated_object) and `ActiveJob::Performs` and wow! The conventions these gems put in place help simplify a codebase drastically. I particularly love `ActiveJob::Performs`—it helped me refactor out all `ApplicationJob` classes I had and keep important context in the right domain model.
 

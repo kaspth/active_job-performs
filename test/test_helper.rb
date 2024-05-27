@@ -66,6 +66,8 @@ class Post::Publisher < Base
   def publish
     self.class.performed = true
   end
+  attr_accessor :skip_publish_later
+  def publish_later = skip_publish_later || super
 
   def retract(reason:)
     puts reason

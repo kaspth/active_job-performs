@@ -169,6 +169,19 @@ Additionally, in case the job is meant to be internal to the object, `performs :
 
 E.g. `private performs :some_method` will generate a private `some_method_later` method.
 
+#### Overriding the generated instance `_later` method
+
+The instance level `_later` methods, like `publish_later` above, are generated into an included module. So in case you have a condition where you'd like to prevent the enqueue, you can override the method and call `super`:
+
+```ruby
+class Post < ApplicationRecord
+  performs def publish
+    # …
+  end
+  def publish_later = some_condition? && super
+end
+```
+
 ### Usage with `ActiveRecord::AssociatedObject`
 
 The [`ActiveRecord::AssociatedObject`](https://github.com/kaspth/active_record-associated_object) gem also implements `GlobalID::Identification`, so you can do this too:

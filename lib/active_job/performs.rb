@@ -54,7 +54,7 @@ module ActiveJob::Performs
         RUBY
       end
 
-      class_eval <<~RUBY, __FILE__, __LINE__ + 1
+      performs_later_methods.class_eval <<~RUBY, __FILE__, __LINE__ + 1
         def #{method}_later#{suffix}(*arguments, **options)
           #{job}.scoped_by_wait(self).perform_later(self, *arguments, **options)
         end
@@ -72,6 +72,10 @@ module ActiveJob::Performs
     def apply_performs_to(job_class, **configs, &block)
       configs.each { job_class.public_send(_1, _2) }
       job_class.class_exec(&block) if block_given?
+    end
+
+    def performs_later_methods
+      @performs_later_methods ||= Module.new.tap { include _1 }
     end
 end
 

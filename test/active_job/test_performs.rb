@@ -55,4 +55,13 @@ class ActiveJob::TestPerforms < ActiveSupport::TestCase
       perform_enqueued_jobs
     end
   end
+
+  test "allows overriding later methods with conditions and call super" do
+    @publisher.skip_publish_later = true
+
+    assert_no_enqueued_jobs only: Post::Publisher::PublishJob do
+      @publisher.publish_later
+    end
+    refute Post::Publisher.performed
+  end
 end

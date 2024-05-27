@@ -14,7 +14,7 @@ GlobalID.app = :performs
 GlobalID::Locator.use(:performs) { _1.model_class.find(_1.model_id.to_i) }
 
 ActiveRecord::Base.establish_connection(adapter: "sqlite3", database: ":memory:")
-ActiveRecord::Base.logger = Logger.new(STDOUT)
+ActiveRecord::Base.logger = Logger.new(STDOUT) if ENV["VERBOSE"] || ENV["CI"]
 
 ActiveRecord::Schema.define do
   create_table :invoices do |t|

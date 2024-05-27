@@ -53,7 +53,7 @@ class Post::Publisher < Base
 
   performs queue_as: :not_really_important
   performs :publish, queue_as: :important, discard_on: ActiveJob::DeserializationError do
-    retry_on StandardError, wait: :exponentially_longer
+    retry_on StandardError, wait: :polynomially_longer
   end
 
   performs :retract, wait: 5.minutes

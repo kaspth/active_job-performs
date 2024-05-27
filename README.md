@@ -14,7 +14,7 @@ class Post < ActiveRecord::Base
 
   # `performs` builds a `Post::PublishJob` and routes configs over to it.
   performs :publish, queue_as: :important, discard_on: SomeError do
-    retry_on TimeoutError, wait: :exponentially_longer
+    retry_on TimeoutError, wait: :polynomially_longer
   end
 
   def publish
@@ -34,7 +34,7 @@ class Post < ActiveRecord::Base
   class PublishJob < Job
     queue_as :important
     discard_on SomeError
-    retry_on TimeoutError, wait: :exponentially_longer
+    retry_on TimeoutError, wait: :polynomially_longer
 
     # We generate `perform` passing in the `post` and calling `publish` on it.
     def perform(post, *arguments, **options)

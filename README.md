@@ -2,6 +2,24 @@
 
 `ActiveJob::Performs` adds the `performs` macro to set up jobs by convention.
 
+### Praise from people
+
+Here's what [@claudiob](https://github.com/claudiob) had to say after using `ActiveJob::Performs`:
+
+> I’ve been using active_job-performs for the last month and I love it love it love it!!
+>
+> Your thought process behind it is so thorough. I have a bunch of jobs now attached to models and my app/jobs folder… is empty!!
+>
+> This saves me a lot of mental hoops, I don’t have to switch between files anymore, everything is self-contained. Thank you!!!
+
+From [@andycroll](https://github.com/andycroll) in a [writeup](https://andycroll.com/ruby/launching-usingrails) about launching [UsingRails](https://usingrails.com):
+
+> I’ve also adopted a couple of gems—with exceptional Rails-level taste and author pedigree—that I hadn’t used in anger before, including `active_job-performs` from Kasper […]. Would recommend both.
+
+And [@nshki](https://github.com/nshki) after trying it:
+
+> Spent some time playing with [@kaspth](https://github.com/kaspth)'s [`ActiveRecord::AssociatedObject`](https://github.com/kaspth/active_record-associated_object) and `ActiveJob::Performs` and wow! The conventions these gems put in place help simplify a codebase drastically. I particularly love `ActiveJob::Performs`—it helped me refactor out all `ApplicationJob` classes I had and keep important context in the right domain model.
+
 ## Usage with `ActiveRecord::Base` & other `GlobalID::Identification` objects
 
 `ActiveJob::Performs` works with any object that has `include GlobalID::Identification` and responds to that interface.
@@ -229,12 +247,6 @@ class Post < ActiveRecord::Base
   performs :publish, wait_until: -> post { Date.tomorrow.noon if post.graceful? }
 end
 ```
-
-### Praise from people
-
-Here's what [@nshki](https://github.com/nshki) found when they tried `ActiveJob::Performs`:
-
-> Spent some time playing with [@kaspth](https://github.com/kaspth)'s [`ActiveRecord::AssociatedObject`](https://github.com/kaspth/active_record-associated_object) and `ActiveJob::Performs` and wow! The conventions these gems put in place help simplify a codebase drastically. I particularly love `ActiveJob::Performs`—it helped me refactor out all `ApplicationJob` classes I had and keep important context in the right domain model.
 
 ## Installation
 

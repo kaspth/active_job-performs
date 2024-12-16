@@ -118,6 +118,10 @@ class Post < ActiveRecord::Base
   # a bulk method to enqueue many jobs at once. So you can do this:
   #
   #   Post.unpublished.in_batches.each(&:publish_later_bulk)
+  #
+  # Or pass in a subset of posts as an argument:
+  #
+  #   Post.publish_later_bulk Post.unpublished
   def self.publish_later_bulk
     ActiveJob.perform_all_later all.map { PublishJob.new(_1) }
   end
@@ -256,7 +260,7 @@ end
 
 ### Usage with `ActiveRecord::AssociatedObject`
 
-The [`ActiveRecord::AssociatedObject`](https://github.com/kaspth/active_record-associated_object) gem also implements `GlobalID::Identification`, so you can do this too:
+The [`ActiveRecord::AssociatedObject`](https://github.com/kaspth/active_record-associated_object) gem also implements `GlobalID::Identification`, so you use `performs` exactly like you would on Active Records:
 
 ```ruby
 class Post::Publisher < ActiveRecord::AssociatedObject
@@ -275,6 +279,11 @@ class Post::Publisher < ActiveRecord::AssociatedObject
   end
 end
 ```
+
+> [!NOTE]
+> There's one difference with Active Record: you must pass in a set to `_later_bulk` methods. Like so:
+>
+> `Post::Publisher.publish_later_bulk Post::Publisher.first(10)`
 
 ### Passing `wait` to `performs`
 

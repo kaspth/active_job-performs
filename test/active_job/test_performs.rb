@@ -25,6 +25,20 @@ class ActiveJob::TestPerforms < ActiveSupport::TestCase
     assert Post::Publisher.performed
   end
 
+  test "active job integration bulk method" do
+    assert_performed_with job: Post::Publisher::PublishJob, args: [ @publisher ], queue: "important" do
+      Post::Publisher.publish_later_bulk [ @publisher ]
+    end
+
+    assert Post::Publisher.performed
+  end
+
+  test "active job integration bulk method raises without argument" do
+    assert_raise ArgumentError do
+      Post::Publisher.publish_later_bulk
+    end
+  end
+
   test "supports private methods" do
     assert_includes Post::Publisher.private_instance_methods, :private_method
     assert_includes Post::Publisher.private_instance_methods, :private_method_later

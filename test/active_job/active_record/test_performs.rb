@@ -60,6 +60,15 @@ class ActiveJob::ActiveRecord::TestPerformsBulk < ActiveSupport::TestCase
     assert_equal 5, Invoice.pluck(:reminded_at).compact.size
   end
 
+  test "performs bulk as an argument" do
+    assert_enqueued_jobs 5, only: Invoice::DeliverReminderJob do
+      Invoice.deliver_reminder_later_bulk! Invoice.all
+    end
+    perform_enqueued_jobs
+
+    assert_equal 5, Invoice.pluck(:reminded_at).compact.size
+  end
+
   test "performs bulk in_batches" do
     assert_enqueued_jobs 5, only: Invoice::DeliverReminderJob do
       Invoice.in_batches(of: 2).each(&:deliver_reminder_later_bulk!)

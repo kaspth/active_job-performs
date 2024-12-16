@@ -1,6 +1,59 @@
 # ActiveJob::Performs
 
-`ActiveJob::Performs` adds the `performs` macro to set up jobs by convention.
+`ActiveJob::Performs` adds a `performs` class method to make the model + job loop vastly more conventional. You use it like this:
+
+```ruby
+class Post < ApplicationRecord
+  performs :publish
+  # Or `performs def publish`!
+
+  def publish
+    # Some logic to publish a post
+  end
+end
+```
+
+Then we build a job for the instance method and define a `post.publish_later` instance method, and more:
+
+```ruby
+class Post < ApplicationRecord
+  class Job < ApplicationJob; end # We build a general Job class to share configuration between method jobs.
+
+  # Individual method jobs inherit from the `Post::Job` defined above.
+  class PublishJob < Job
+    # We generate the required `perform` method passing in the `post` and calling `publish` on it.
+    def perform(post, *, **) = post.publish(*, **)
+  end
+
+  # On Rails 7.1, where `ActiveJob.perform_all_later` exists, we also generate
+  # a bulk method to enqueue many jobs at once. So you can do this:
+  #
+  #   Post.unpublished.in_batches.each(&:publish_later_bulk)
+  def self.publish_later_bulk
+    ActiveJob.perform_all_later all.map { PublishJob.new(_1) }
+  end
+
+  # We generate `publish_later` to wrap the job execution forwarding arguments and options.
+  def publish_later(*, **) = PublishJob.perform_later(self, *, **)
+
+  def publish
+    # Some logic to publish a post.
+  end
+end
+```
+
+## Benefits
+
+1. Conventional Jobs: they'll now mostly call instance methods like `publish_later` -> `publish`.
+1. Follows Rails' internal conventions: this borrows from `ActionMailbox::InboundEmail#process_later` calling `process` and `ActionMailer::Base#deliver_later` calling `deliver`.
+1. Clarity & less guess work: the `_later` methods standardize how you call jobs throughout your app, so you can instantly tell what's happening.
+1. Less tedium: getting an instance method run in the background is just now a `performs` call with some potential configuration.
+1. Fewer files to manage: you don't have to dig up something in `app/jobs` just to learn almost nothing from the boilerplate in there.
+1. Remaining jobs stand out: `app/jobs` is way lighter, so any jobs in there that don't fit the `performs` pattern now stand out way more.
+1. More consolidated logic: sometimes Job classes house model-level logic, but now it's all the way out in `app/jobs` instead of `app/models`, huh?
+
+> [!TIP]
+> On that last point, `performs` does put more logic back within your Active Records, so if you need further encapsulation to prevent them growing too large, consider checking out [active_record-associated_object](https://github.com/kaspth/active_record-associated_object).
 
 ### Praise from people
 
@@ -20,7 +73,8 @@ And [@nshki](https://github.com/nshki) after trying it:
 
 > Spent some time playing with [@kaspth](https://github.com/kaspth)'s [`ActiveRecord::AssociatedObject`](https://github.com/kaspth/active_record-associated_object) and `ActiveJob::Performs` and wow! The conventions these gems put in place help simplify a codebase drastically. I particularly love `ActiveJob::Performs`—it helped me refactor out all `ApplicationJob` classes I had and keep important context in the right domain model.
 
-## Usage with `ActiveRecord::Base` & other `GlobalID::Identification` objects
+## Usage
+### with `ActiveRecord::Base` & other `GlobalID::Identification` objects
 
 `ActiveJob::Performs` works with any object that has `include GlobalID::Identification` and responds to that interface.
 
@@ -79,7 +133,7 @@ class Post < ActiveRecord::Base
 end
 ```
 
-We generate the `Post::Job` class above to share configuration between method level jobs. E.g. if you had a retract method that was setup very similar, you could do:
+We generate the `Post::Job` class above to share configuration between method level jobs. E.g. if you had a `retract` method that was setup very similar, you could do:
 
 ```ruby
 class Post < ActiveRecord::Base

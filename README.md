@@ -13,7 +13,7 @@ class Post < ApplicationRecord
 end
 ```
 
-Then we build a job for the instance method and define a `post.publish_later` instance method, and more:
+Here's what `performs` generates under the hood:
 
 ```ruby
 class Post < ApplicationRecord
@@ -25,12 +25,12 @@ class Post < ApplicationRecord
     def perform(post, *, **) = post.publish(*, **)
   end
 
-  # On Rails 7.1, where `ActiveJob.perform_all_later` exists, we also generate
+  # On Rails 7.1+, where `ActiveJob.perform_all_later` exists, we also generate
   # a bulk method to enqueue many jobs at once. So you can do this:
   #
   #   Post.unpublished.in_batches.each(&:publish_later_bulk)
-  def self.publish_later_bulk
-    ActiveJob.perform_all_later all.map { PublishJob.new(_1) }
+  def self.publish_later_bulk(set = all)
+    ActiveJob.perform_all_later set.map { PublishJob.new(_1) }
   end
 
   # We generate `publish_later` to wrap the job execution forwarding arguments and options.
@@ -127,8 +127,8 @@ class Post < ActiveRecord::Base
   # Or pass in a subset of posts as an argument:
   #
   #   Post.publish_later_bulk Post.unpublished
-  def self.publish_later_bulk
-    ActiveJob.perform_all_later all.map { PublishJob.new(_1) }
+  def self.publish_later_bulk(set = all)
+    ActiveJob.perform_all_later set.map { PublishJob.new(_1) }
   end
 
   # We generate `publish_later` to wrap the job execution.

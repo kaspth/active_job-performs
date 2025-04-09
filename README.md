@@ -55,7 +55,12 @@ end
 > [!TIP]
 > On that last point, `performs` does put more logic back within your Active Records, so if you need further encapsulation to prevent them growing too large, consider checking out [active_record-associated_object](https://github.com/kaspth/active_record-associated_object).
 
-### Praise from people
+### Used in production & praise from people
+
+The https://www.rubyevents.org team uses `ActiveJob::Performs` quite a bit:
+
+- [See `performs` calls in RubyEvents](https://github.com/search?q=repo%3Arubyevents%2Frubyevents+performs+language%3ARuby&type=code&l=Ruby)
+
 
 Here's what [@claudiob](https://github.com/claudiob) had to say after using `ActiveJob::Performs`:
 

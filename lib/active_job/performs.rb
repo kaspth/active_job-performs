@@ -5,18 +5,14 @@ require_relative "performs/version"
 module ActiveJob; end
 module ActiveJob::Performs
   module Waiting
-    def Proc(value)
-      value.respond_to?(:call) ? value : proc { value }
-    end unless Kernel.respond_to?(:Proc) # Optimistically assume Ruby gets this and it'll work fine.
+    attr_reader :wait, :wait_until
 
-    def wait(value = nil)
-      @wait = Proc(value) if value
-      @wait
+    def wait=(value)
+      @wait = value.respond_to?(:call) ? value : proc { value }
     end
 
-    def wait_until(value = nil)
-      @wait_until = Proc(value) if value
-      @wait_until
+    def wait_until=(value)
+      @wait_until = value.respond_to?(:call) ? value : proc { value }
     end
 
     def scoped_by_wait(record)
@@ -69,9 +65,13 @@ module ActiveJob::Performs
       name.safe_constantize || const_set(name, Class.new(yield))
     end
 
-    def apply_performs_to(job_class, **configs, &block)
-      configs.each { job_class.public_send(_1, _2) }
-      job_class.class_exec(&block) if block_given?
+    def apply_performs_to(job, **configs, &block)
+      job.class_exec(&block) if block_given?
+
+      configs.each do |name, value|
+        name = "#{name}=".then.find { job.respond_to? _1 } || name
+        job.public_send name, value
+      end
     end
 
     def performs_later_methods

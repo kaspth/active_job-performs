@@ -90,7 +90,7 @@ class Post < ActiveRecord::Base
   extend ActiveJob::Performs # We technically auto-extend ActiveRecord::Base, but other object hierarchies need this.
 
   # `performs` builds a `Post::PublishJob` and routes configs over to it.
-  performs :publish, queue_as: :important, discard_on: SomeError do
+  performs :publish, queue_adapter: :sidekiq, queue_as: :important, discard_on: SomeError do
     retry_on TimeoutError, wait: :polynomially_longer
   end
 
@@ -109,6 +109,7 @@ class Post < ActiveRecord::Base
 
   # Individual method jobs inherit from the `Post::Job` defined above.
   class PublishJob < Job
+    self.queue_adapter = :sidekiq
     queue_as :important
     discard_on SomeError
     retry_on TimeoutError, wait: :polynomially_longer
@@ -141,6 +142,9 @@ class Post < ActiveRecord::Base
   end
 end
 ```
+
+> [!NOTE]
+> We prefer & call `{name}=` setter methods, but fall back to getters. That's how we support `self.queue_adapter=`, but also `queue_as` which is not configured via `queue_as=`.
 
 We generate the `Post::Job` class above to share configuration between method level jobs. E.g. if you had a `retract` method that was setup very similar, you could do:
 

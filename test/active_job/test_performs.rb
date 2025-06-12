@@ -50,6 +50,10 @@ class ActiveJob::TestPerforms < ActiveSupport::TestCase
     end
   end
 
+  test "can assign queue_adapter" do
+    assert_equal "inline", Post::Publisher::RetractJob.queue_adapter_name
+  end
+
   test "wait is forwarded" do
     assert_enqueued_with job: Post::Publisher::RetractJob, args: [ @publisher, reason: "Some reason" ], at: 5.minutes.from_now do
       @publisher.retract_later reason: "Some reason"

@@ -58,7 +58,7 @@ class Post::Publisher < Base
     retry_on StandardError, wait: :polynomially_longer
   end
 
-  performs :retract, wait: 5.minutes
+  performs :retract, wait: 5.minutes, queue_adapter: :inline
   performs :social_media_boost!, wait_until: -> publisher { publisher.next_funnel_step_happens_at }
 
   def next_funnel_step_happens_at

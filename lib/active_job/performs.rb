@@ -55,8 +55,6 @@ module ActiveJob::Performs
           #{job}.scoped_by_wait(self).perform_later(self, *arguments, **options)
         end
       RUBY
-
-      [method, :"#{method}_later#{suffix}"] # Ensure `private performs :some_method` privates both names.
     end
   end
 

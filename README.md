@@ -192,8 +192,7 @@ If there's an Active Record method that you'd like any model to be able to run f
 class ApplicationRecord < ActiveRecord::Base
   self.abstract_class = true
 
-  # We're passing specific queues for monitoring, but you may not need or want them.
-  performs :touch,   queue_as: "active_record.touch"
+  # We're passing specific queues for monitoring, but they're optional.
   performs :update,  queue_as: "active_record.update"
   performs :destroy, queue_as: "active_record.destroy"
 end
@@ -202,19 +201,21 @@ end
 Then a model could now run things like:
 
 ```ruby
-record.touch_later
-record.touch_later :reminded_at, time: 5.minutes.from_now # Pass supported arguments to `touch`
-
-record.update_later reminded_at: 1.year.ago
-
-# Particularly handy to use on a record with many `dependent: :destroy` associations.
-# Plus if anything fails, the transaction will rollback and the job fails, so you can retry it later!
+record.update_later reminded_at: 1.year.ago # Forward along arguments to the eventual `update` call.
 record.destroy_later
 ```
 
-You may not want this for `touch` and `update`, and maybe you'd rather architect your system in such a way that they don't have so many side-effects, but having the option can be handy!
+> [!TIP]
+> `destroy_later` could be particularly useful on a record with many `dependent: :destroy` associations.
+> If anything fails, the transaction will rollback and the job fails, so you can retry it later!
 
-Also, I haven't tested all the Active Record methods, so please file an issue if you encounter any.
+> [!NOTE]
+> Maybe you'd rather architect your system such that these methods don't have so many side-effects, but having the option can be handy.
+
+> [!WARNING]
+> Don't use this pattern with `touch` because Rails has an internal [touch_later](https://github.com/rails/rails/blob/690ec8898318b8f50714e86676353ebe1551261e/activerecord/lib/active_record/touch_later.rb#L11) private API method used in `belongs_to <some_association>, touch: true` assocations. If your model is one day used in such an assocation and you were using this pattern your app would break.
+
+I haven't tested all the Active Record methods, so please file an issue if you encounter any.
 
 #### Method suffixes
 

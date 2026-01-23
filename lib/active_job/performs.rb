@@ -12,11 +12,15 @@ module ActiveJob::Performs
     end
 
     def wait_until=(value)
+      @wait_until_symbol = value if value.is_a?(Symbol)
       @wait_until = value.respond_to?(:call) ? value : proc { value }
     end
 
     def scoped_by_wait(record)
-      if waits = { wait: wait&.call(record), wait_until: wait_until&.call(record) }.compact and waits.any?
+      scoped_wait = wait&.call(record)
+      scoped_wait_until = @wait_until_symbol ? record.public_send(@wait_until_symbol) : wait_until&.call(record)
+
+      if waits = { wait: scoped_wait, wait_until: scoped_wait_until }.compact and waits.any?
         set(waits)
       else
         self

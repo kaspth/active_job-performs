@@ -60,8 +60,20 @@ class Post::Publisher < Base
 
   performs :retract, wait: 5.minutes, queue_adapter: :inline
   performs :social_media_boost!, wait_until: -> publisher { publisher.next_funnel_step_happens_at }
+  performs :cooldown, wait: :cooldown_duration
+  performs :schedule_check, wait: -> { 30.minutes }
+  performs :deadline_boost!, wait_until: :next_deadline
+  performs :global_reminder, wait_until: -> { DateTime.tomorrow.noon }
 
   def next_funnel_step_happens_at
+    DateTime.tomorrow.noon
+  end
+
+  def cooldown_duration
+    10.minutes
+  end
+
+  def next_deadline
     DateTime.tomorrow.noon
   end
 
@@ -78,6 +90,11 @@ class Post::Publisher < Base
   def social_media_boost!
     puts "social media soooo boosted"
   end
+
+  def cooldown = nil
+  def schedule_check = nil
+  def deadline_boost! = nil
+  def global_reminder = nil
 
   private performs def private_method
     puts __method__

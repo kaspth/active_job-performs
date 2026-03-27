@@ -8,11 +8,11 @@ module ActiveJob::Performs
     attr_reader :wait, :wait_until
 
     def wait=(value)
-      @wait = value.respond_to?(:call) ? value : proc { value }
+      @wait = normalize_wait(value)
     end
 
     def wait_until=(value)
-      @wait_until = value.respond_to?(:call) ? value : proc { value }
+      @wait_until = normalize_wait(value)
     end
 
     def scoped_by_wait(record)
@@ -21,6 +21,20 @@ module ActiveJob::Performs
       else
         self
       end
+    end
+
+    private
+
+    def normalize_wait(value)
+      case value
+      when Symbol then ->(record) { record.public_send(value) }
+      when Proc   then normalize_callable(value)
+      else value.respond_to?(:call) ? normalize_callable(value) : proc { value }
+      end
+    end
+
+    def normalize_callable(value)
+      value.arity == 0 ? ->(_) { value.call } : value
     end
   end
 

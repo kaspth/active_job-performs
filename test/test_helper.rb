@@ -65,17 +65,9 @@ class Post::Publisher < Base
   performs :deadline_boost!, wait_until: :next_deadline
   performs :global_reminder, wait_until: -> { DateTime.tomorrow.noon }
 
-  def next_funnel_step_happens_at
-    DateTime.tomorrow.noon
-  end
-
-  def cooldown_duration
-    10.minutes
-  end
-
-  def next_deadline
-    DateTime.tomorrow.noon
-  end
+  def next_funnel_step_happens_at = DateTime.tomorrow.noon
+  private def cooldown_duration = 10.minutes
+  private def next_deadline = DateTime.tomorrow.noon
 
   def publish
     self.class.performed = true

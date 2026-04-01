@@ -27,14 +27,12 @@ module ActiveJob::Performs
 
     def normalize_wait(value)
       case value
-      when Symbol then ->(record) { record.public_send(value) }
-      when Proc   then normalize_callable(value)
-      else value.respond_to?(:call) ? normalize_callable(value) : proc { value }
+      when Symbol then value.to_proc
+      when Proc
+        value.arity.zero? ? proc { value.call } : value
+      else
+        proc { value }
       end
-    end
-
-    def normalize_callable(value)
-      value.arity == 0 ? ->(_) { value.call } : value
     end
   end
 

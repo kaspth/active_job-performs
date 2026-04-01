@@ -308,6 +308,8 @@ class Post < ActiveRecord::Base
 
   # Additionally, a block can be passed to have access to the `post`:
   performs :social_media_boost, wait: -> post { post.social_media_boost_grace_period }
+  performs :social_media_boost, wait: :social_media_boost_grace_period # The symbol version also supports calling private methods
+  def social_media_boost_grace_period = 5.minutes
 end
 ```
 

@@ -24,16 +24,16 @@ module ActiveJob::Performs
     end
 
     private
-
-    def normalize_wait(value)
-      case value
-      when Symbol then value.to_proc
-      when Proc
-        value.arity.zero? ? proc { value.call } : value
-      else
-        proc { value }
+      def normalize_wait(value)
+        case value
+        when Symbol
+          proc { _1.send value }
+        when Proc
+          value.arity.zero? ? proc { value.call } : value
+        else
+          proc { value }
+        end
       end
-    end
   end
 
   def performs(method = nil, **configs, &block)

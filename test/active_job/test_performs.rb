@@ -73,6 +73,30 @@ class ActiveJob::TestPerforms < ActiveSupport::TestCase
     end
   end
 
+  test "wait with symbol calls instance method for duration" do
+    assert_enqueued_with job: Post::Publisher::CooldownJob, args: [ @publisher ], at: 10.minutes.from_now do
+      @publisher.cooldown_later
+    end
+  end
+
+  test "wait with zero-arity lambda" do
+    assert_enqueued_with job: Post::Publisher::ScheduleCheckJob, args: [ @publisher ], at: 30.minutes.from_now do
+      @publisher.schedule_check_later
+    end
+  end
+
+  test "wait_until with symbol calls instance method for timestamp" do
+    assert_enqueued_with job: Post::Publisher::DeadlineBoostJob, args: [ @publisher ], at: DateTime.tomorrow.noon do
+      @publisher.deadline_boost_later!
+    end
+  end
+
+  test "wait_until with zero-arity lambda" do
+    assert_enqueued_with job: Post::Publisher::GlobalReminderJob, args: [ @publisher ], at: DateTime.tomorrow.noon do
+      @publisher.global_reminder_later
+    end
+  end
+
   test "allows overriding later methods with conditions and call super" do
     @publisher.skip_publish_later = true
 

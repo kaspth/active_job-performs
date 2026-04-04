@@ -8,6 +8,9 @@ require "active_record"
 require "debug"
 require "minitest/autorun"
 
+# We shouldn't generate the wrapping shared config Job at the top-level.
+class Job; end
+
 class ApplicationJob < ActiveJob::Base; end
 
 GlobalID.app = :performs

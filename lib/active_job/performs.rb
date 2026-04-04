@@ -72,7 +72,7 @@ module ActiveJob::Performs
 
   private
     def safe_define(name)
-      name.safe_constantize || const_set(name, Class.new(yield))
+      const_defined?(name, false) ? const_get(name, false) : const_set(name, Class.new(yield))
     end
 
     def apply_performs_to(job, **configs, &block)

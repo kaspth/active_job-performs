@@ -4,6 +4,11 @@ module ActiveJob::ActiveRecord; end
 class ActiveJob::ActiveRecord::TestPerforms < ActiveSupport::TestCase
   setup { @invoice = Invoice.create! }
 
+  test "general job class definition" do
+    assert defined?(ApplicationRecord::Job)
+    assert defined?(Invoice::Job)
+  end
+
   test "touch_later" do
     assert_changes -> { @invoice.reload.updated_at } do
       assert_performed_with job: ApplicationRecord::TouchJob, args: [@invoice] do

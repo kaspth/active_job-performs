@@ -1,5 +1,7 @@
 # ActiveJob::Performs
 
+[![Ruby Users Forum](https://img.shields.io/discourse/topics?server=https%3A%2F%2Fwww.rubyforum.org&style=flat&logo=discourse&label=Ruby%20Users%20Forum)](https://www.rubyforum.org/tag/active-job-performs/58)
+
 `ActiveJob::Performs` adds a `performs` class method to make the model + job loop vastly more conventional. You use it like this:
 
 ```ruby
@@ -332,6 +334,10 @@ Install the gem and add to the application's Gemfile by executing:
 If bundler is not being used to manage dependencies, install the gem by executing:
 
     $ gem install active_job-performs
+
+## Community
+
+Join us in the `active_job-performs` tag on the [Ruby Users Forum](https://github.com/solojavier/active_job-performs), and the [Spinel Discord](https://discord.gg/u34TcumAk8).
 
 ## Development
 
